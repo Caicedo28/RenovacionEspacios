@@ -1,0 +1,99 @@
+{% extends "./plantilla.html" %}
+{% block contenido %}
+
+<form enctype="multipart/form-data" action="/procesarEdicionProyecto/" id="frm_editar_proyecto" method="post" class="container mt-5 p-4">
+    <h1 class="text-center mb-4">Editar Proyecto</h1>
+    {% csrf_token %}
+
+    <input type="hidden" name="idPro" value="{{ proyecto.idPro }}">
+
+    <div class="mb-3">
+        <label for="txt_nombreArea" class="form-label"><b>Nombre del Área:</b></label>
+        <select name="txt_nombreArea" id="txt_nombreArea" class="form-select" required>
+            <option value="" disabled>Seleccione un Nombre de Área</option>
+            {% for area in area %}
+            <option value="{{ area.idAre }}" {% if proyecto.area_id == area.idAre %}selected{% endif %}>
+                {{ area.nombreAre }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="txt_nombre" class="form-label"><b>Nombre:</b></label>
+        <input type="text" value="{{ proyecto.nombrePro }}" class="form-control" name="txt_nombre" id="txt_nombre" placeholder="Ingrese el Nombre del Proyecto">
+    </div>
+
+    <div class="mb-3">
+        <label for="txt_fecha_inicio" class="form-label"><b>Fecha Inicio:</b></label>
+        <input type="date" value="{{ proyecto.fecha_inicioPro |date:'Y-m-d' }}" class="form-control" name="txt_fecha_inicio" id="txt_fecha_inicio">
+    </div>
+
+    <div class="mb-3">
+        <label for="txt_fecha_fin" class="form-label"><b>Fecha Fin:</b></label>
+        <input type="date" value="{{ proyecto.fecha_finPro |date:'Y-m-d' }}" class="form-control" name="txt_fecha_fin" id="txt_fecha_fin">
+    </div>
+
+    <div class="mb-3">
+        <label for="select_estado" class="form-label"><b>Estado:</b></label>
+        <select class="form-select" name="select_estado" id="select_estado">
+            <option value="En Proceso" {% if proyecto.estado == "En Proceso" %}selected{% endif %}>En Proceso</option>
+            <option value="Completado" {% if proyecto.estado == "Completado" %}selected{% endif %}>Completado</option>
+            <option value="Cancelado" {% if proyecto.estado == "Cancelado" %}selected{% endif %}>Cancelado</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="txt_presupuesto" class="form-label"><b>Presupuesto (USD):</b></label>
+        <input type="number" value="{{ proyecto.presupuestoPro }}" class="form-control" name="txt_presupuesto" id="txt_presupuesto" placeholder="Ingrese el Presupuesto">
+    </div>
+
+    <div class="mb-3">
+        <label for="foto_actual" class="form-label"><b>Foto Actual:</b></label>
+        {% if proyecto.foto %}
+            <img src="{{ proyecto.foto.url }}" alt="Foto Actual" class="img-fluid mb-2" style="max-height: 200px;">
+        {% else %}
+            <p>No hay foto disponible.</p>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        <label for="txt_foto" class="form-label"><b>Cambiar Foto:</b></label>
+        <input type="file" class="form-control" name="txt_foto" id="txt_foto">
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary me-3">Guardar</button>
+        <a href="/listadoProyecto/" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+    $("#frm_editar_proyecto").validate({
+        rules: {
+            "txt_nombre": { required: true, letras: true },
+            "txt_fecha_inicio": { required: true, date: true },
+            "txt_fecha_fin": { required: true, date: true },
+            "select_estado": { required: true },
+            "txt_presupuesto": { required: true, number: true, min: 0 },
+            "txt_foto": { required: false }
+        },
+        messages: {
+            "txt_nombre": { required: "Por favor ingrese el nombre del proyecto.", letras: "Ingrese solo letras." },
+            "txt_fecha_inicio": { required: "Por favor ingrese la fecha de inicio." },
+            "txt_fecha_fin": { required: "Por favor ingrese la fecha de fin." },
+            "select_estado": { required: "Por favor seleccione el estado del proyecto." },
+            "txt_presupuesto": { required: "Por favor ingrese el presupuesto.", number: "Ingrese un valor válido.", min: "El presupuesto debe ser mayor o igual a 0." }
+        }
+    });
+
+    $("#txt_foto").fileinput({
+        language: "es",
+        allowedFileExtensions: ["png", "jpg", "jpeg"],
+        showCaption: false,
+        dropZoneEnabled: true,
+        showClose: false
+    });
+</script>
+
+{% endblock %}

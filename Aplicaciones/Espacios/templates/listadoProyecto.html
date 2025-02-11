@@ -1,0 +1,64 @@
+{% extends "./plantilla.html" %}
+{% block contenido %}
+<br>
+<h1 style="text-align: center;">LISTADO DE PROYECTOS</h1>
+<br>
+
+<div style="margin-left:3%; margin-right: 3%;" class="table-responsive">
+    <table class="table table-bordered table-striped table-hover" id="tbl_proyectos">
+        <thead class="table-warning">
+            <tr>
+                <th>ID</th>
+                <th>NOMBRE DEL ÁREA</th>
+                <th>NOMBRE DEL PROYECTO</th>
+                <th>FECHA INICIO</th>
+                <th>FECHA FIN</th>
+                <th>ESTADO</th>
+                <th>PRESUPUESTO (USD)</th>
+                <th>FOTO</th>
+                <th>ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for proyecto in proyecto %}
+            <tr>
+                <td>{{ proyecto.idPro }}</td>
+                <td>{{ proyecto.area_publica.nombreAre }}</td>
+                <td>{{ proyecto.nombrePro }}</td>
+                <td>{{ proyecto.fecha_inicioPro }}</td>
+                <td>{{ proyecto.fecha_finPro }}</td>
+                <td>{{ proyecto.estadoPro }}</td>
+                <td>{{ proyecto.presupuestoPro }}</td>
+                <td>
+                    {% if proyecto.foto and proyecto.foto.url %}
+                    <a href="{{ proyecto.foto.url }}" target="_blank">
+                        <img src="{{ proyecto.foto.url }}" alt="Foto del Proyecto" height="100px" width="100px">
+                    </a><br>
+                    <a download href="{{ proyecto.foto.url }}">Descargar</a>
+                    {% else %}
+                    <p>No hay foto disponible.</p>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a href="/editarProyecto/{{ proyecto.idPro }}" type="button" class="btn btn-outline-primary btn-sm">Editar</a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a onclick="return confirm('¿Estás seguro de eliminar este proyecto?');" href="/eliminarProyecto/{{ proyecto.idPro }}" type="button" class="btn btn-outline-danger btn-sm">Eliminar</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    table = new DataTable('#tbl_proyectos', {
+        layout: {
+            topStart: {
+                buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+            }
+        }
+    });
+</script>
+{% endblock %}

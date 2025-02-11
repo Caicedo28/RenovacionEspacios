@@ -1,0 +1,93 @@
+{% extends "./plantilla.html" %}
+{% block contenido %}
+
+<form enctype="multipart/form-data" action="/procesarEdicionContratista/" id="frm_editar_contratista" method="post" class="container mt-5 p-4">
+    <h1 class="text-center mb-4">Editar Contratista</h1>
+    {% csrf_token %}
+
+    <input type="hidden" name="idCon" value="{{ contratista.idCon }}">
+
+    <div class="mb-3">
+        <label for="txt_nombre" class="form-label"><b>Nombre:</b></label>
+        <input type="text" value="{{ contratista.nombreCon }}" class="form-control" name="txt_nombre" id="txt_nombre" placeholder="Ingrese el nombre del contratista">
+    </div>
+
+    <div class="mb-3">
+        <label for="txt_telefono" class="form-label"><b>Teléfono:</b></label>
+        <input type="text" value="{{ contratista.telefonoCon }}" class="form-control" name="txt_telefono" id="txt_telefono" placeholder="Ingrese el teléfono del contratista">
+    </div>
+
+    <div class="mb-3">
+        <label for="txt_email" class="form-label"><b>Email:</b></label>
+        <input type="email" value="{{ contratista.emailCon }}" class="form-control" name="txt_email" id="txt_email" placeholder="Ingrese el email del contratista">
+    </div>
+
+    <div class="mb-3">
+        <label for="txt_especializacion" class="form-label"><b>Especialización:</b></label>
+        <input type="text" value="{{ contratista.especialidadCon }}" class="form-control" name="txt_especializacion" id="txt_especializacion" placeholder="Ingrese la especialización del contratista">
+    </div>
+
+    <div class="mb-3">
+        <label for="txt_experiencia" class="form-label"><b>Experiencia (años):</b></label>
+        <input type="text" value="{{ contratista.experienciaCon }}" class="form-control" name="txt_experiencia" id="txt_experiencia" placeholder="Ingrese los años de experiencia">
+    </div>
+
+    <div class="mb-3">
+        <label for="foto_actual" class="form-label"><b>Foto Actual:</b></label>
+        {% if contratista.foto %}
+            <img src="{{ contratista.foto.url }}" alt="Foto Actual" class="img-fluid mb-2" style="max-height: 200px;">
+        {% else %}
+            <p>No hay foto disponible.</p>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        <label for="txt_foto" class="form-label"><b>Cambiar Foto:</b></label>
+        <input type="file" name="txt_foto" id="txt_foto" class="form-control">
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary me-3">Guardar</button>
+        <a href="/listadoContratista/" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+    $("#frm_editar_contratista").validate({
+        rules: {
+            "txt_nombre": { required: true, letras: true },
+            "txt_telefono": { required: true, digits: true, minlength: 10, maxlength: 10 },
+            "txt_email": { required: true, email: true },
+            "txt_especializacion": { required: true },
+            "txt_experiencia": { required: true},
+            "txt_foto": {required: true}
+        },
+        messages: {
+            "txt_nombre": { required: "Por favor ingrese el nombre del contratista.", letras: "Ingrese solo letras." },
+            "txt_telefono": { 
+                required: "Por favor ingrese el teléfono.", 
+                digits: "Ingrese solo números.", 
+                minlength: "El teléfono debe tener al menos 10 dígitos.", 
+                maxlength: "El teléfono no debe exceder los 10 dígitos."
+            },
+            "txt_email": { required: "Por favor ingrese el correo electrónico.", email: "Ingrese un correo válido." },
+            "txt_especializacion": { required: "Por favor ingrese la especialización." },
+            "txt_experiencia": { 
+                required: "Por favor ingrese los años de experiencia." 
+            },
+            "txt_foto":{required: "Por favor ingrese la Foto."}
+        }
+    });
+</script>
+
+<script>
+    $("#txt_foto").fileinput({
+        language: "es",
+        allowedFileExtensions: ["png", "jpg", "jpeg"],
+        showCaption: false,
+        dropZoneEnabled: true,
+        showClose: false
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends "./plantilla.html" %}
+{% block contenido %}
+
+<form enctype="multipart/form-data" action="/procesarEdicionAreaPublica/" id="frm_editar_area" method="post" class="container mt-5 p-4 ">
+    <h1 class="text-center mb-4">Editar Área Pública</h1>
+    {% csrf_token %}
+
+    <br>
+        <input type="hidden" name="idAre" value="{{area.idAre}}">
+    <br>
+
+    <div class="mb-3">
+        <label for="txt_nombre" class="form-label"><b>Nombre del Área:</b></label>
+        <input type="text" value="{{area.nombreAre}}" class="form-control" name="txt_nombre" id="txt_nombre" placeholder="Ingrese el nombre del área">
+    </div>
+
+    <div class="mb-3">
+        <label for="txt_ubicacion" class="form-label"><b>Ubicación:</b></label>
+        <input type="text" value="{{area.ubicacionAre}}" class="form-control" name="txt_ubicacion" id="txt_ubicacion" placeholder="Ingrese la ubicación del área">
+    </div>
+
+    <div class="mb-3">
+        <label for="select_estado" class="form-label"><b>Estado:</b></label>
+        <select name="select_estado" id="select_estado" class="form-select" required>
+            <option value="activo" {% if area.estado == "activo" %}selected{% endif %}>Activo</option>
+            <option value="remodelacion" {% if area.estado == "remodelacion" %}selected{% endif %}>En Remodelación</option>
+            <option value="finalizado" {% if area.estado == "finalizado" %}selected{% endif %}>Finalizado</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="foto_actual" class="form-label"><b>Foto Actual:</b></label>
+        {% if area.foto %}
+            <img src="{{ area.foto.url }}" alt="Foto Actual" class="img-fluid mb-2" style="max-height: 200px;">
+        {% else %}
+            <p>No hay foto disponible.</p>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <label for="txt_foto" class="form-label"><b>Cambiar Foto:</b></label>
+        <input type="file" name="txt_foto" id="txt_foto" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label for="txt_fecha" class="form-label"><b>Fecha:</b></label>
+        <input type="date" value="{{area.fecha_creacionAre |date:'Y-m-d'}}" class="form-control" name="txt_fecha" id="txt_fecha">
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary me-3">Guardar</button>
+        <a href="/listadoAreaPublica/" type="reset" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+    $("#frm_editar_area").validate({
+        rules: {
+            "txt_nombre": {
+                required: true,
+            },
+            "txt_ubicacion": {
+                required: true,
+            },
+            "estado_area": {
+                required: true,
+            },
+            "txt_fecha": {
+                required: true,
+            },
+            "txt_foto": {
+                required: true,
+            },
+        },
+        messages: {
+            "txt_nombre": {
+                required: "Por favor ingrese el nombre del área",
+            },
+            "txt_ubicacion": {
+                required: "Por favor ingrese la ubicación del área",
+            },
+            "estado_area": {
+                required: "Por favor seleccione el estado del área",
+            },
+            "txt_fecha": {
+                required: "Por favor ingrese la fecha",
+            },
+            "txt_foto":{
+                required: "Por favor ingrese una foto",
+            },
+        },
+    });
+</script>
+
+<script>
+    $("#txt_foto").fileinput({
+        language: "es",
+        allowedFileExtensions: ["png|jpg|jpeg"],
+        showCaption: false,
+        dropZoneEnabled: true,
+        showClose: false
+    })
+</script>
+
+{% endblock %}

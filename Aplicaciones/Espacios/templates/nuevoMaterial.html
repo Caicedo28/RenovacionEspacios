@@ -1,0 +1,62 @@
+{% extends "./plantilla.html" %}
+{% block contenido %}
+
+<form enctype="multipart/form-data" action="/guardarMaterial/" id="frm_nuevo_material" method="post" class="container mt-5 p-4">
+    <h1 class="text-center mb-4">Agregar Material</h1>
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label for="txt_nombre" class="form-label"><b>Nombre:</b></label>
+        <input type="text" class="form-control" name="txt_nombre" id="txt_nombre" placeholder="Ingrese el Nombre del Producto">
+    </div>
+
+    <div class="mb-3">
+        <label for="select_tipo" class="form-label"><b>Tipo:</b></label>
+        <select class="form-select" name="select_tipo" id="select_tipo">
+            <option value="">---Seleccione---</option>
+            <option value="Construcción">Construcción</option>
+            <option value="Decoración">Decoración</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="txt_unidad" class="form-label"><b>Unidad:</b></label>
+        <input type="text" class="form-control" name="txt_unidad" id="txt_unidad" placeholder="Ingrese la Unidad (Ej: kg, m2, unidad)">
+    </div>
+
+    <div class="mb-3">
+        <label for="txt_costo" class="form-label"><b>Costo:</b></label>
+        <input type="number" step="0.01" class="form-control" name="txt_costo" id="txt_costo" placeholder="Ingrese el Costo">
+    </div>
+
+    <div class="mb-3">
+        <label for="txt_cantidad" class="form-label"><b>Cantidad:</b></label>
+        <input type="text" class="form-control" name="txt_cantidad" id="txt_cantidad" placeholder="Ingrese la Cantidad">
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary me-3">Guardar</button>
+        <a href="/listadoMaterial/" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+    $("#frm_nuevo_material").validate({
+        rules: {
+            "txt_nombre": { required: true },
+            "select_tipo": { required: true },
+            "txt_unidad": { required: true },
+            "txt_costo": { required: true, number: true },
+            "txt_cantidad": { required: true, }
+        },
+        messages: {
+            "txt_nombre": { required: "Por favor ingrese el nombre del producto." },
+            "select_tipo": { required: "Por favor seleccione el tipo." },
+            "txt_unidad": { required: "Por favor ingrese la unidad." },
+            "txt_costo": { required: "Por favor ingrese el costo.", number: "Ingrese un número válido." },
+            "txt_cantidad": { required: "Por favor ingrese la cantidad." }
+        }
+    });
+</script>
+
+{% endblock %}

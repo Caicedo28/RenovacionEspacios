@@ -1,0 +1,63 @@
+{% extends "./plantilla.html" %}
+{% block contenido %}
+<br>
+<h1 style="text-align: center;">LISTADO DE CONTRATISTAS</h1>
+<br>
+
+<div style="margin-left:3%; margin-right: 3%;" class="table-responsive">
+    <table class="table table-bordered table-striped table-hover" id="tbl_contratistas">
+        <thead class="table-warning">
+            <tr>
+                <th>ID</th>
+                <th>FOTO</th>
+                <th>NOMBRE</th>
+                <th>TELÉFONO</th>
+                <th>EMAIL</th>
+                <th>ESPECIALIZACIÓN</th>
+                <th>EXPERIENCIA (AÑOS)</th>
+                <th>ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contratista in contratista %}
+            <tr>
+                <td>{{ contratista.idCon }}</td>
+                <td>
+                    {% if contratista.foto and contratista.foto.url %}
+                    <a href="{{ contratista.foto.url }}" target="_blank">
+                        <img src="{{ contratista.foto.url }}" alt="Foto del Contratista" height="100px" width="100px">
+                    </a><br>
+                    <a download href="{{ contratista.foto.url }}">Descargar</a>
+                    {% else %}
+                    <p>No hay foto disponible.</p>
+                    {% endif %}
+                </td>
+                <td>{{ contratista.nombreCon }}</td>
+                <td>{{ contratista.telefonoCon }}</td>
+                <td>{{ contratista.emailCon }}</td>
+                <td>{{ contratista.especialidadCon }}</td>
+                <td>{{ contratista.experienciaCon }}</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a href="/editarContratista/{{ contratista.idCon }}" type="button" class="btn btn-outline-primary btn-sm">Editar</a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a onclick="return confirm('¿Estás seguro de eliminar este contratista?');" href="/eliminarContratista/{{ contratista.idCon }}" type="button" class="btn btn-outline-danger btn-sm">Eliminar</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    table = new DataTable('#tbl_contratistas', {
+        layout: {
+            topStart: {
+                buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+            }
+        }
+    });
+</script>
+
+{% endblock %}
